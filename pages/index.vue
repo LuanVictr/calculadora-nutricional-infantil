@@ -25,21 +25,23 @@
           <Teleport to="body">
             <div v-if="mostrarModal" class="modal-overlay">
               <div class="modal-content">
-                <q-card-section>
-                  <h2 class="text-3xl font-bold mb-4">Resultado</h2>
-                  <p class="text-4xl font-semibold text-blue-500">
-                    IMC: {{ imc.toFixed(2) }}
-                  </p>
-                  <p class="text-lg mt-2 text-gray-700">
-                    {{ interpretacaoIMC }}
-                  </p>
-                  <q-btn
-                    label="Calcular Outro"
-                    color="secondary"
-                    class="mt-6"
-                    @click="resetarFormulario"
-                  />
-                </q-card-section>
+                <q-card class="p-8 shadow-2xl rounded-2xl bg-white text-center">
+                  <q-card-section>
+                    <h2 class="text-3xl font-bold mb-4">Resultado</h2>
+                    <p class="text-4xl font-semibold text-blue-500">
+                      IMC: {{ imc.toFixed(2) }}
+                    </p>
+                    <p class="text-lg mt-2 text-gray-700">
+                      {{ interpretacaoIMC }}
+                    </p>
+                    <q-btn
+                      label="Calcular Outro"
+                      color="secondary"
+                      class="mt-6"
+                      @click="resetarFormulario"
+                    />
+                  </q-card-section>
+                </q-card>
               </div>
             </div>
           </Teleport>
@@ -58,15 +60,16 @@ const $q = useQuasar();
 const imc = ref(null);
 const interpretacaoIMC = ref("");
 const mostrarModal = ref(false);
-const isMobile = computed(() => $q.screen.width < 768);
+const isMobile = computed(() => $q.platform.is.mobile);
 
-const calcularIMC = ({ peso, altura }) => {
+const calcularIMC = async ({ peso, altura }) => {
   if (peso && altura) {
     const alturaMetros = altura / 100;
     imc.value = peso / (alturaMetros * alturaMetros);
     interpretacaoIMC.value = interpretarIMC(imc.value);
 
     if (isMobile.value) {
+      await nextTick();
       mostrarModal.value = true;
     }
   }
@@ -105,6 +108,7 @@ const resetarFormulario = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 9999;
 }
 
 .modal-content {
