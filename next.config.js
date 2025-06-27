@@ -2,7 +2,7 @@ const path = require("path");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: process.env.NEXT_OUTPUT_MODE,
+  output: "standalone",
   experimental: {
     outputFileTracingRoot: path.join(__dirname, "../"),
   },
